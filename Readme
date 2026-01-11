@@ -1,0 +1,281 @@
+Checks installed Python version
+py --version
+
+Creates a virtual environment named
+py -m venv venv
+
+Activates the virtual environment
+venv\Scripts\activate
+
+Installs FastAPI with all optional dependencies
+pip install fastapi[all]
+
+Displays all packages installed
+pip list
+
+Runs the FastAPI application
+uvicorn main:app --reload
+
+To run the code 
+fastapi dev
+
+-------------------------------
+
+1️⃣ Virtual Environment (Why & How)
+
+## Why Virtual Environment?
+
+* Keeps project dependencies isolated
+* Avoids version conflicts between projects
+* Makes deployment easier
+
+Create & Activate Virtual Environment
+Creates a virtual environment named
+py -m venv venv
+
+Activates the virtual environment
+venv\Scripts\activate
+
+Installs FastAPI with all optional dependencies
+pip install fastapi[all]
+
+Displays all packages installed
+pip list
+
+Runs the FastAPI application
+uvicorn main:app --reload
+
+To run the code 
+fastapi dev
+
+### What are these?
+
+* FastAPI → Backend framework (API creation)
+* Uvicorn → ASGI web server to run FastAPI
+
+3️⃣ Web Server & Ports
+
+### What is a Web Server?
+
+* A program that listens for client requests
+* Sends responses back (JSON / HTML)
+
+### Common Ports
+
+| Service    | Default Port |
+| ---------- | ------------ |
+| React      | 3000         |
+| FastAPI    | 8000         |
+| MySQL      | 3306         |
+| PostgreSQL | 5432         |
+
+ Multiple services can run on **same machine** by using **different ports**
+
+ 4️⃣ Domain Name vs IP Address
+
+* In real deployment → we use **domain names**
+* While learning → we use **local machine IP**
+
+Example:
+
+```
+http://127.0.0.1:8000
+http://localhost:8000
+```
+5️⃣ File Server vs Web Server
+
+📂 File Server
+
+* Transfers files
+* Uses **FTP / SFTP**
+* Example: Downloading files
+
+```
+Client ----request file----> Server
+Client <----respond file---- Server
+```
+
+---
+
+🌐 Web Server
+
+* Exchanges **data**, not files
+* Uses **HTTP/HTTPS**
+* Data format: **JSON / HTML**
+
+```
+Client ----request----> Server
+Client <---response--- Server
+```
+ 6️⃣ Web Application Flow
+
+```
+Frontend (React / HTML)
+        |
+        | HTTP Request
+        ↓
+Backend (FastAPI / Java / Python)
+        |
+        | Query
+        ↓
+Database (PostgreSQL / MySQL)
+        |
+        | Data
+        ↑
+Backend
+        |
+        | JSON / HTML
+        ↑
+Frontend
+```
+7️⃣ REST API (Important Concept)
+
+### REST – Representational State Transfer
+
+* Client sends **request**
+* Server returns **current state**
+* Data is represented using **JSON** (easy & lightweight)
+
+Example:
+
+```json
+{
+  "id": 1,
+  "name": "phone",
+  "price": 20000
+}
+```
+8️⃣ API Endpoints
+
+⚠️ Server does NOT respond to all requests
+Only responds if **endpoint exists**
+
+### Example Endpoints
+
+```
+/api/explore
+/api/payments
+/api/buy
+```
+
+❌ If client requests `/api/jobs` and no endpoint exists → **404 error**
+
+9️⃣ CRUD Operations (Correct Mapping)
+
+| Operation | HTTP Method |
+| --------- | ----------- |
+| Create    | POST        |
+| Read      | GET         |
+| Update    | PUT / PATCH |
+| Delete    | DELETE      |
+
+
+1️⃣0️⃣ Pydantic (Why We Use It)
+
+### Purpose:
+
+* Data validation
+* Type checking
+* Automatic error messages
+* Clean API request/response
+
+### Without Pydantic:
+
+❌ Invalid data enters backend
+❌ Manual validation
+❌ Runtime errors
+
+### With Pydantic:
+
+✔ Automatic validation
+✔ Clear error response
+✔ Clean code
+
+1️⃣1️⃣ Database Connection Concept
+
+### Example Class
+
+```python
+class Product:
+    id
+    name
+    description
+    price
+    quantity
+```
+
+### Mapping Concept
+
+| Python Object | Database |
+| ------------- | -------- |
+| Class         | Table    |
+| Attributes    | Columns  |
+| Object        | Row      |
+
+
+1️⃣2️⃣ ORM – Object Relational Mapping
+
+### What is ORM?
+
+* Converts **Python objects ↔ Database rows**
+* No need to write raw SQL
+
+Example:
+
+```python
+Product(
+    id=1,
+    name="phone",
+    price=20000,
+    description="Vivo Y7",
+    qty=7
+)
+```
+
+➡ Automatically stored as a database row
+
+
+1️⃣3️⃣ SQLAlchemy (Why We Use It)
+
+### Problems Without ORM:
+
+❌ Manual table creation
+❌ Manual SQL queries
+❌ Error-prone
+❌ Hard to maintain
+
+### SQLAlchemy Solves:
+
+✔ Auto table creation
+✔ Object-based queries
+✔ Database independent
+✔ Clean & scalable
+
+
+1️⃣4️⃣ Database Driver
+
+### PostgreSQL Driver
+
+```bash
+pip install sqlalchemy psycopg2
+```
+
+| Component  | Role              |
+| ---------- | ----------------- |
+| SQLAlchemy | ORM               |
+| psycopg2   | PostgreSQL driver |
+
+
+
+1️⃣5️⃣ Summary (Quick Revision)
+
+* Virtual env → isolate dependencies
+* FastAPI → backend framework
+* Uvicorn → web server
+* REST → communication style
+* JSON → data format
+* CRUD → API operations
+* Pydantic → data validation
+* ORM → object ↔ table mapping
+* SQLAlchemy → ORM tool
+* PostgreSQL → database
