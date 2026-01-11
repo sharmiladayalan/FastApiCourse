@@ -32,9 +32,11 @@
 # ❌ Poor API design for real-time systems
 
 from enum import Enum
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException, status
 from schemas import Shipment
 from typing import Any
+from schemas import ShipmentStatus, ShipmentRead, ShipmentCreate,BaseShipment
+
 app = FastAPI()
 shipments ={
     1223:{
@@ -108,6 +110,43 @@ class ShipmentStatus(Enum):
 
 @app.post("/shipment_update")
 def update_data(id: int,body: dict[str, ShipmentStatus]) -> dict[str, Any]:
+    shipments[id].update(body)
+    return {"message": f'{id} updated successfully'}
+    
+'''
+==================
+Response Model
+=================='''
+# Why response_model
+# response_model is used to control and validate what data the API sends back to the client.
+# It filters extra fields
+# It ensures correct data types
+# It returns a fixed, clean response format
+
+@app.get("/shipment_response/{id}", response_model=BaseShipment)
+def get_shipment_response(id: int) :
+    if id not in shipments:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Shipment not found")
+    return  shipments[id]
+    
+'''
+======================
+Multiple response models
+======================'''
+# refer schemas.py
+# Why Multiple Response Models are Used??
+# APIs do not always return the same type of response.
+# Depending on the action or result, the response structure changes.
+# So, we use multiple response models to clearly define each possible response format.
+@app.get("/shipment_mul_response/{id}", response_model=ShipmentRead)
+def get_shipment_mul_response(id: int) :
+    if id not in shipments:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Shipment not found")
+    return shipments[id]
+
+
+@app.post("/shipment_update_response", response_model=ShipmentCreate)
+def update_data_response(id: int,body: dict[str, ShipmentStatus]) -> dict[str, Any]:
     shipments[id].update(body)
     return {"message": f'{id} updated successfully'}
     
