@@ -221,3 +221,4 @@ def delete_shipment(id: int) -> dict[str, Any]:
     del shipments[id]
     # shipments.pop(id)
     return {"Message": f'Shipment ID {id} deleted successfully'}
+
