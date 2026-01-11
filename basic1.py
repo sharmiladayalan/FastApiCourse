@@ -1,4 +1,4 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, status, HTTPException
 from typing import Any
 
 app = FastAPI()
@@ -107,3 +107,17 @@ def get_shipment_by_condition(field: str,id: int) -> dict[str,Any]:
         field: shipments[id][field]
     }
 
+'''
+=============
+HTTP Exception
+==============
+'''
+#Getting an error with status query parameter in http request
+@app.get("/shipment_http")
+def get_shipments(id: int):
+    if id not in shipments:
+        raise HTTPException(
+            status_code = status.HTTP_404_NOT_FOUND,
+            detail = "requested id doesn't exist"
+        )
+    return shipments[id]
