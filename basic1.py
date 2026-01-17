@@ -1,10 +1,11 @@
 from fastapi import FastAPI, status, HTTPException
 from typing import Any,Optional
+# from database import shipments
 
 app = FastAPI()
 
 
-#sample bulk data for shipment 
+# sample bulk data for shipment 
 shipments ={
     1223:{
     "weight" : 5.8,
@@ -58,7 +59,7 @@ def get_shipment_latest() -> dict[str,Any]:
 
 # path parameter
 #if we give an id then it will take as input
-@app.get("/shipment/{id}")
+@app.get("/shipment_by_id/{id}")
 def get_shipment_id(id: int) -> dict[str,Any]:
     return {
         "id" : id,
@@ -89,8 +90,10 @@ def get_shipment_by_status(status):
     for shipment_id in shipments:
         if shipments[shipment_id]["status"] == status:
             result.append({shipment_id: shipments[shipment_id]})
-        return result
-    return {"message": "No shipments with the given status"}
+    if not result:
+        return {"message": "No shipments with the given status"}
+
+    return result
 
 '''
 =================================

@@ -30,66 +30,64 @@
 # ❌ No single object representation
 # ❌ Harder to scale
 # ❌ Poor API design for real-time systems
-
-from enum import Enum
 from fastapi import FastAPI, HTTPException, status
-from schemas import Shipment
+# from schemas import Shipment
 from typing import Any
-from schemas import ShipmentStatus, ShipmentRead, ShipmentCreate,BaseShipment
-
+from schemas import BaseShipment, ShipmentRead, ShipmentCreate, ShipmentStatus
+from database import shipments
 app = FastAPI()
-shipments ={
-    1223:{
-    "weight" : 5.8,
-    "content" : "Wooden table",
-    "status"  : "In transit"
-    },
-    1224:{
-    "weight" : 3.2,
-    "content" : "Metal chair",
-    "status"  : "Delivered"
-    },
-    1225:{
-    "weight" : 12.5,
-    "content" : "Glass bookshelf",
-    "status"  : "In transit"
-    },
-    1226:{
-    "weight" : 8.7,
-    "content" : "Wooden desk",
-    "status"  : "Pending"
-    },
-    1227:{
-    "weight" : 2.1,
-    "content" : "Lamp",
-    "status"  : "Delivered"
-    },
-    1228:{
-    "weight" : 6.4,
-    "content" : "Sofa",
-    "status"  : "In transit"
-    }
-}
+# shipments ={
+#     1223:{
+#     "weight" : 5.8,
+#     "content" : "Wooden table",
+#     "status"  : "In transit"
+#     },
+#     1224:{
+#     "weight" : 3.2,
+#     "content" : "Metal chair",
+#     "status"  : "Delivered"
+#     },
+#     1225:{
+#     "weight" : 12.5,
+#     "content" : "Glass bookshelf",
+#     "status"  : "In transit"
+#     },
+#     1226:{
+#     "weight" : 8.7,
+#     "content" : "Wooden desk",
+#     "status"  : "Pending"
+#     },
+#     1227:{
+#     "weight" : 2.1,
+#     "content" : "Lamp",
+#     "status"  : "Delivered"
+#     },
+#     1228:{
+#     "weight" : 6.4,
+#     "content" : "Sofa",
+#     "status"  : "In transit"
+#     }
+# }
 
 @app.get("/shipments")
 def get_all_shipment():
     return shipments
 
 
-@app.post("/shipment")
-def submit_shipment(shipment: Shipment) -> dict[str, Any]:
-    new_id = max(shipments.keys()) + 1
+# @app.post("/shipment", response_model="None")
+# def submit_shipment(shipment: Shipment) -> dict[str, Any]:
+#     new_id = max(shipments.keys()) + 1
 
-    shipments[new_id] = {
-        "weight": shipment.weight,
-        "content": shipment.content,
-        "status": shipment.status
-    }
+#     shipments[new_id] = {
+#         "weight": shipment.weight,
+#         "content": shipment.content,
+#         "status": shipment.status
+#     }
 
-    return {
-        "message": f"Shipment with ID {new_id} added successfully.",
-        "shipment_id": new_id
-    }
+#     return {
+#         "message": f"Shipment with ID {new_id} added successfully.",
+#         "shipment_id": new_id
+#     }
 
 '''
 ========
@@ -102,7 +100,7 @@ Enum
 # It ensures that only predefined, meaningful values are accepted in the application.
 # In your code, ShipmentStatus defines valid shipment states.
 # refer schemas.py
-class ShipmentStatus(Enum):
+'''class ShipmentStatus(Enum):
     placed = "Placed"
     in_transit = "in_transit"
     out_for_delivery = "out_for_delivery"
@@ -111,7 +109,7 @@ class ShipmentStatus(Enum):
 @app.post("/shipment_update")
 def update_data(id: int,body: dict[str, ShipmentStatus]) -> dict[str, Any]:
     shipments[id].update(body)
-    return {"message": f'{id} updated successfully'}
+    return {"message": f'{id} updated successfully'} '''
     
 '''
 ==================

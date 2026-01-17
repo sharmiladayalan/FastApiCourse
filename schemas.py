@@ -17,7 +17,13 @@ class BaseShipment(BaseModel):
 class ShipmentRead(BaseShipment):
     pass
 
+class Order(BaseModel):   
+    price: int
+    title: str
+    description: str
+
 class ShipmentCreate(BaseShipment):
+    order: Order
     pass
 
 class ShipmentUpdate(BaseModel):
