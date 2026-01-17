@@ -33,8 +33,8 @@
 from fastapi import FastAPI, HTTPException, status
 # from schemas import Shipment
 from typing import Any
-from schemas import BaseShipment, ShipmentRead, ShipmentCreate, ShipmentStatus
-from database import shipments
+from schemas import BaseShipment, ShipmentRead, ShipmentCreate, ShipmentStatus, ShipmentUpdate
+from database import shipments,save
 app = FastAPI()
 # shipments ={
 #     1223:{
@@ -143,8 +143,21 @@ def get_shipment_mul_response(id: int) :
     return shipments[id]
 
 
-@app.post("/shipment_update_response", response_model=ShipmentCreate)
-def update_data_response(id: int,body: dict[str, ShipmentStatus]) -> dict[str, Any]:
-    shipments[id].update(body)
-    return {"message": f'{id} updated successfully'}
-    
+# @app.post("/shipment_update_response", response_model=ShipmentCreate)
+# def update_data_response(id: int,body: dict[str, ShipmentStatus]) -> dict[str, Any]:
+#     shipments[id].update(body)
+#     return {"message": f'{id} updated successfully'}
+# from fastapi import HTTPException
+
+@app.patch("/shipment/{id}")
+def update_shipment_status(id: int, body: ShipmentUpdate):
+    if id not in shipments:
+        raise HTTPException(
+            status_code=404,
+            detail="Shipment not found"
+        )
+
+    shipments[id]["status"] = body.status.value
+    save()
+
+    return shipments[id]

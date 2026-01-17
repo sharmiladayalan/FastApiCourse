@@ -25,14 +25,14 @@
         "weight": 5.7,
         "content": "Phone charger",
         "destination": 20,
-        "status": "Pending"
+        "status": "Delivered"
     },
     {
         "id": 1227,
         "weight": 15.4,
         "content": "Laptop bag",
         "destination": 8,
-        "status": "In transit"
+        "status": "Delivered"
     },
     {
         "id": 1228,
@@ -46,7 +46,7 @@
         "weight": 18.6,
         "content": "Office chair",
         "destination": 3,
-        "status": "In transit"
+        "status": "Delivered"
     },
     {
         "id": 1230,
@@ -60,13 +60,13 @@
         "weight": 24.3,
         "content": "Monitor stand",
         "destination": 7,
-        "status": "Delivered"
+        "status": "Out for delivery"
     },
     {
         "id": 1232,
         "weight": 11.5,
         "content": "Desk lamp",
         "destination": 14,
-        "status": "In transit"
+        "status": "Out for delivery"
     }
 ]
