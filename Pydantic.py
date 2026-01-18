@@ -149,7 +149,7 @@ def get_shipment_mul_response(id: int) :
 #     return {"message": f'{id} updated successfully'}
 # from fastapi import HTTPException
 
-@app.patch("/shipment/{id}")
+@app.patch("/shipment/{id}",response_model=ShipmentRead)
 def update_shipment_status(id: int, body: ShipmentUpdate):
     if id not in shipments:
         raise HTTPException(
