@@ -1,86 +1,71 @@
-# import json
-
-# shipments = {}
-
-# with open("shipment.json") as json_file:
-#     data = json.load(json_file)
-#     for value in data:
-#         shipments[value["id"]] = value
-# # print(shipments)
-
-# def save():
-#     with open("shipment.json", "w") as json_file:
-#         json.dump(list(shipments.values()), json_file, indimport sq
-    
 import sqlite3
-# Mke the connection
-connection = sqlite3.connect("sqlite.db")
-cursor = connection.cursor()
+from typing import Any
+from schemas import ShipmentCreate, ShipmentUpdate
 
-# 1.Create a table
-cursor.execute("CREATE TABLE IF NOT EXISTS shipment(id INTEGER PRIMARY KEY, content TEXT, weight REAL, status TEXT)")
+class Database:
+    def __init__(self):
+        # Make the connection
+        self.conn = sqlite3.connect("sqlite.db")
+        # Get cursor to execute queries and fetch data
+        self.cur = self.conn.cursor()
+        self.create_table("shipment")
 
-# Insert records
-# cursor.execute("INSERT INTO shipment VALUES(2, 'Bag', 0.5, 'Placed')")
-# connection.commit()
+    def create_table(self, name: str):
+        # 1.Create a table
+        self.cur.execute("""
+                         CREATE TABLE IF NOT EXISTS ?(
+                         id INTEGER PRIMARY KEY,
+                         content TEXT, 
+                         weight REAL,
+                          status TEXT)""", (name,))
+        
+    def create(self, shipment: ShipmentCreate):
+        self.cur.execute("SELECT MAX(id) FROM shipment")
+        result = self.cur.fetchone()
+        new_id = result[0] +1
 
-# Read the data
-# Using fetch all
-# cursor.execute("SELECT * FROM shipment ")
-# result = cursor.fetchall()
-# print(result)
+        # 2. Insert records
+        self.cur.execute("""INSERT INTO shipment
+                        VALUES (:id, :content, :weight, :status)""",
+                         {
+                             "id": new_id,
+                             **shipment.model_dump(),
+                             "status": "placed",
+                         })
+        self.conn.commit()
 
-# Using fetchmany
-# cursor.execute("SELECT * FROM shipment ")
-# result = cursor.fetchmany(2)
-# print(result)
+        def get(self, id: int) -> dict[str, Any]:
+            # 3. Read the data
+            self.cur.execute("SELECT * FROM shipment WHERE id = ?", (id,))
+            row = self.cur.fetchone()
 
-# # Using fetchone
-# cursor.execute("SELECT * FROM shipment ")
-# result = cursor.fetchone()
-# print(result)
+            if row is None:
+                return {"status": "Not Found"}
+            
+            return {
+                "id": row[0],
+                "content": row[1],
+                "weight": row[2],
+                "status": row[3],
+            }
 
-# Delete a shipment by id
-# cursor.execute("DELETE FROM shipment WHERE id = 2")
-# connection.commit()
+        def update(self, shipment: ShipmentUpdate) -> dict[str, Any]:
+            self.cur.execute(""" UPDATE shipment SET status = :status 
+                             WHERE id = :id""",
+                             {
+                                 "id": shipment.id,
+                                **shipment.model_dump()
+                             })
+            self.conn.commit()
+            return self.get(shipment.id)
+            
+        def delete(self, id: int):
+            self.cur.executr(""" DELETE FROM shipment 
+                             WHERE id = :id""",
+                             {
+                                 id: id
+                             })
+            self.conn.commit()
 
-# Drop table
-# cursor.execute("DROP TABLE shipment")
-# connection.commit()
-
-# Update The shipment data
-# cursor.execute("UPDATE shipment SET status ='In transit' WHERE id = 1")
-# connection.commit()
-
-# Update the value using formated  string
-id=2
-status ="Out for delivery"
-cursor.execute(
-    f'UPDATE shipment SET status = "{status}" WHERE id = {id}'
-)
-connection.commit()
-
-# Using placeholders to avoid SQL injection
-id = 1
-status ="Delivered"
-cursor.execute("UPDATE shipment SET status =  ? WHERE id = ?", (status,id))
-connection.commit()
-
-# Using named placeholders
-id = 1
-status ="Delivered"
-cursor.execute("UPDATE shipment SET status = :status WHERE id = :id", {"status": status, "id": id})
-connection.commit()
-
-
-
-
-
-
-
-
-
-
-
-# Close the connection  when done
-connection.close
+        def close():
+            self.conn.close()

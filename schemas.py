@@ -34,4 +34,5 @@ class ShipmentCreate(BaseShipment):
     pass
 
 class ShipmentUpdate(BaseModel):
+    id: int
     status: ShipmentStatus
