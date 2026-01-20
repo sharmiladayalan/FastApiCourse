@@ -1,16 +1,9 @@
+# Here we define the Pydantic schemas for our Shipment 
+
+
+
 from pydantic import BaseModel, Field
-from enum import Enum
-
-
-
-class ShipmentStatus(str, Enum):
-    placed = "Placed"
-    in_transit = "In transit"
-    out_for_delivery = "Out for delivery"
-    delivered = "Delivered"
-    pending = "Pending"
-
-
+from database.models import ShipmentStatus
 
 class BaseShipment(BaseModel):
     id: int
@@ -18,7 +11,6 @@ class BaseShipment(BaseModel):
     content: str =Field(max_length=70)
     distination: int
    
-
 class ShipmentRead(BaseShipment):
     id: int
     status: ShipmentStatus
