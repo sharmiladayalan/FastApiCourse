@@ -6,7 +6,7 @@
 # and variables are defined as columns in that table
 # We can also use constraints like max length and less than or equal to
 
-import datetime
+from datetime import datetime
 from sqlmodel import SQLModel, Field
 from enum import Enum
 
@@ -18,10 +18,10 @@ class ShipmentStatus(str, Enum):
     pending = "Pending"
 
 
-class Shipment(SQLModel):
+class Shipment(SQLModel, table=True):
     # __table__ attribute specifies the name of the table in the database
     __tablename__ = "shipment"
-    id: int = Field(Primary_key=True)
+    id: int = Field(primary_key=True)
     content: str
     weight: float =Field(le=25)
     destination: str

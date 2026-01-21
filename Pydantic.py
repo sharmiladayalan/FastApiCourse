@@ -31,11 +31,23 @@
 # ❌ Harder to scale
 # ❌ Poor API design for real-time systems
 from fastapi import FastAPI, HTTPException, status
-# from schemas import Shipment
-from typing import Any
-from schemas import BaseShipment, ShipmentRead, ShipmentCreate, ShipmentStatus, ShipmentUpdate
-from database import shipments,save
-app = FastAPI()
+# from scalar_fastapi import get_scalar_api_reference
+from contextlib import asynccontextmanager
+
+from schemas import BaseShipment, ShipmentRead,ShipmentUpdate
+from app.database.session import create_db_tables
+from Databse.database import Database
+
+
+@asynccontextmanager
+async def lifespan_handler(app: FastAPI):
+    create_db_tables()
+    # print("Server started....")
+    yield
+    print("......stoped")
+
+
+app = FastAPI(lifespan=lifespan_handler)
 # shipments ={
 #     1223:{
 #     "weight" : 5.8,
